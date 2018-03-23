@@ -11,7 +11,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  ViewStyle
+  ViewStyle,
+  LayoutAnimation
 } from "react-native"
 import ImageZoom from "react-native-image-pan-zoom"
 import styles from "./image-viewer.style"
@@ -148,6 +149,7 @@ export default class ImageViewer extends React.Component<Props, State> {
 
       const imageSizes = this!.state!.imageSizes!.slice()
       imageSizes[index] = imageStatus
+      LayoutAnimation.easeInEaseOut()
       this.setState({ imageSizes })
     }
 
@@ -474,6 +476,16 @@ export default class ImageViewer extends React.Component<Props, State> {
       let height =
         this.state.imageSizes![index] && this.state.imageSizes![index].height
       const imageInfo = this.state.imageSizes![index]
+
+      let times = parseInt(width / screenWidth)    
+      // console.log('getSize',width,height)     
+      // console.log('dimension',screenWidth,screenHeight) 
+      if(times > 3){  //图片宽度大于屏幕宽度的3倍时，缩小图片
+          let displayWidth = screenWidth*3
+          let displayHeight = displayWidth/width*height              
+          // console.log('displaySize',displayWidth,displayHeight)
+          image.url +=`?imageView2/0/w/${displayWidth}/h/${displayHeight}`
+      }       
 
       // 如果宽大于屏幕宽度,整体缩放到宽度是屏幕宽度
       if (width > screenWidth) {
